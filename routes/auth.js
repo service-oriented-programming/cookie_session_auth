@@ -1,8 +1,6 @@
 const express = require('express');
 const User = require('../models/User');
 const router = express.Router();
-
-// Register
 router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -13,8 +11,6 @@ router.post('/register', async (req, res) => {
     res.status(400).json({ error: 'User registration failed', details: err.message });
   }
 });
-
-// Login
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -32,20 +28,15 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Login failed' });
   }
 });
-
-// Logout
 router.get('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) return res.status(500).json({ error: 'Logout failed' });
 
-    // Clear cookies
     res.clearCookie("connect.sid");
     res.json({ message: 'Logout successful!' });
     
   });
 });
-
-// Protected route
 router.get('/profile', async (req, res) => {
   if (!req.session.userId) {
     return res.status(401).json({ error: 'Unauthorized' });
